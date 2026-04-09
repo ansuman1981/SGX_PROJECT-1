@@ -1,0 +1,5 @@
+install.packages("readr")
+library(readr)
+D05 <- read.csv("D05.SI_2024-2026.csv")
+names(D05)
+summary(D05)
