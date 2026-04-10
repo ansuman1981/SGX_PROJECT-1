@@ -17,10 +17,15 @@ dbs$date <- as.Date(dbs$date, format = "%d-%m-%Y")
 head(dbs$date)
 
 # filter the whole date 
-clean_date <- dbs %>%
+clean_data <- dbs %>%
   filter(date >= "2024-01-01" & date <= "2025-12-31")
-class(clean_date$date)
-nrow(clean_date)
+class(clean_data$date)
+nrow(clean_data)
 head(dbs$date)
 
+## bird eye view
+# basic summary for the open colum  
+summary(clean_date$open)
+# Check the 'Spread' (Difference between highest and lowest open ever)
+diff(range(clean_data$open, na.rm = TRUE))
 
