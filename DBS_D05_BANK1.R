@@ -29,3 +29,11 @@ summary(clean_date$open)
 # Check the 'Spread' (Difference between highest and lowest open ever)
 diff(range(clean_data$open, na.rm = TRUE))
 
+#find the percentage difference relative to the mean
+clean_data %>%
+  summarise(
+    Avg = mean(open, na.rm = TRUE),
+    Mid = median(open, na.rm = TRUE),
+    Pct_Diff = ((Mid - Avg) / Avg) * 100
+  )
+
