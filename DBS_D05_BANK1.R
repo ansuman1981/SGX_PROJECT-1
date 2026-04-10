@@ -53,3 +53,16 @@ ggplot(clean_data, aes(x = open, fill = as.factor(year(date)))) +
   theme_minimal() +
   labs(title = "Where the Price 'Lives': 2024 vs 2025", fill = "Year")
 
+
+# Compare the Open price by year with all the major things
+yearly_summary <- clean_data %>%
+  group_by(year(date)) %>%
+  summarise(
+    Avg_Open = mean(open, na.rm = TRUE),
+    Max_Open = max(open, na.rm = TRUE),
+    Min_Open = min(open, na.rm = TRUE),
+    Spread = diff(range(open, na.rm = TRUE)),
+    Volatility = sd(open)
+  )
+
+print(yearly_summary)
