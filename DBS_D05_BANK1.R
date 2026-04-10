@@ -37,3 +37,19 @@ clean_data %>%
     Pct_Diff = ((Mid - Avg) / Avg) * 100
   )
 
+# Compare the Open price by year
+clean_data %>%
+  group_by(Year = year(date)) %>%
+  summarise(
+    Avg_Open = mean(open),
+    Max_Open = max(open),
+    Volatility = sd(open)
+  )
+
+library(ggplot2)
+# check density
+ggplot(clean_data, aes(x = open, fill = as.factor(year(date)))) +
+  geom_density(alpha = 0.4) +
+  theme_minimal() +
+  labs(title = "Where the Price 'Lives': 2024 vs 2025", fill = "Year")
+
