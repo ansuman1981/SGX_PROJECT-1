@@ -135,3 +135,5 @@ weekly_personality <- clean_data %>%
   arrange(Year, match(day_of_week, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")))
 
 print(weekly_personality)
+
+
