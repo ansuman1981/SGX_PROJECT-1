@@ -99,14 +99,15 @@ ggplot(clean_data, aes(x = date, y = open)) +
 
 # black swan 
 
-
 library(ggplot2)
+library(lubridate)
 
 ggplot(clean_data, aes(x = as.factor(year(date)), y = open, fill = as.factor(year(date)))) +
   # Adding a 'notch' makes the median comparison more professional
   geom_boxplot(notch = TRUE, alpha = 0.7, color = "#2c3e50", outlier.shape = NA) + 
   # Adding 'jitter' shows the actual data points lightly in the background
   geom_jitter(width = 0.1, alpha = 0.2, color = "black") +
+  # Note: The names here must match the years in your data
   scale_fill_manual(values = c("2024" = "#BDC3C7", "2025" = "#2980B9")) +
   theme_minimal(base_size = 14) +
   theme(
@@ -121,3 +122,16 @@ ggplot(clean_data, aes(x = as.factor(year(date)), y = open, fill = as.factor(yea
     x = "Trading Year",
     y = "Opening Price (SGD)"
   )
+
+
+# Analyzing the 'Personality' of the Work Week
+weekly_personality <- clean_data %>%
+  group_by(Year =year(date), day_of_week) %>%
+  summarise(
+    Avg_Open = mean(open, na.rm = TRUE),
+    Volatility = sd(open, na.rm = TRUE), # Shows which days are the 'wildest'
+    .groups = "drop"
+  ) %>%
+  arrange(Year, match(day_of_week, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")))
+
+print(weekly_personality)
