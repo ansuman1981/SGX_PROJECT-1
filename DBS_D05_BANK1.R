@@ -136,4 +136,63 @@ weekly_personality <- clean_data %>%
 
 print(weekly_personality)
 
+library(ggplot2)
+# Re-ordering the days so they appear in Work-Week order
+clean_data$day_of_week <- factor(clean_data$day_of_week, 
+                                 levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday"))
 
+ggplot(clean_data, aes(x = day_of_week, y = open, fill = as.factor(year(date)))) +
+  # We use 'stat_summary' to let ggplot calculate the mean for us automatically
+  stat_summary(fun = mean, geom = "bar", position = "dodge") +
+  # Adding error bars shows the 'Volatility' you found (Higher bars = more wild)
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = position_dodge(0.9), width = 0.2) +
+  scale_fill_manual(values = c("2024" = "#BDC3C7", "2025" = "#2980B9")) +
+  theme_minimal() +
+  labs(title = "Weekly Personality: 2024 vs 2025",
+       subtitle = "Error bars represent the Standard Error (Volatility) of each day",
+       x = "Day of the Week",
+       y = "Average Opening Price",
+       fill = "Year")
+
+# Analyzing the month SEASONALITY
+monthly_seasonality <- clean_data %>%
+  group_by(Year = year(date), Month = month(date, label = TRUE)) %>%
+  summarise(
+    Avg_Open = mean(open, na.rm = TRUE),
+    Growth_Range = max(open) - min(open), # Which month had the biggest move?
+    .groups = "drop"
+  ) %>%
+  arrange(Year, Month)
+
+print(monthly_seasonality)
+
+#plot 
+library(ggplot2)
+library(lubridate)
+
+ggplot(monthly_seasonality, aes(x = Month, y = Avg_Open, color = as.factor(Year), group = Year)) +
+  # 1. Draw thick lines and points to show the monthly trajectory
+  geom_line(linewidth = 1.5, alpha = 0.8) +
+  geom_point(size = 3.5) +
+  
+  # 2. Use the established 'Executive' color palette
+  scale_color_manual(values = c("2024" = "#BDC3C7", "2025" = "#2980B9")) +
+  
+  # 3. Enhance the theme for a clean, banking-report look
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 18, color = "#2c3e50"),
+    axis.title = element_text(face = "bold"),
+    axis.text.x = element_text(angle = 0) # Months are short, no need to tilt
+  ) +
+  
+  # 4. Professional Labels
+  labs(
+    title = "Monthly Seasonality: The Annual Pulse of DBS",
+    subtitle = "Comparing average monthly opening prices to identify seasonal trends",
+    x = "Month",
+    y = "Average Opening Price (SGD)",
+    color = "Year"
+  )
