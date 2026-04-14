@@ -233,3 +233,24 @@ verdict_analysis <- clean_data %>%
   mutate(Win_Loss_Percentage = (Count / sum(Count)) * 100)
 
 print(verdict_analysis)
+
+####The Intraday Distribution (Visualizing the Verdict)
+
+library(ggplot2)
+
+# Step 1: Ensure we have the Intraday_Move calculated
+clean_data <- clean_data %>%
+  mutate(Intraday_Move = close - open)
+
+# Step 2: Plot the Density comparison
+ggplot(clean_data, aes(x = Intraday_Move, fill = as.factor(year(date)))) +
+  geom_density(alpha = 0.5) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
+  theme_minimal() +
+  scale_fill_manual(values = c("2024" = "red", "2025" = "green"), name = "Year") +
+  labs(title = "Intraday Momentum Distribution: 2024 vs 2025",
+       subtitle = "Shift to the right indicates stronger intraday buyer conviction",
+       x = "Intraday Move (Close - Open)",
+       y = "Density") +
+  annotate("text", x = 1, y = 0.5, label = "Bulls Win -->", color = "green") +
+  annotate("text", x = -1, y = 0.5, label = "<-- Bears Win", color = "red")
