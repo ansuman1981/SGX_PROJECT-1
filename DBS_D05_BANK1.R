@@ -198,5 +198,21 @@ ggplot(monthly_seasonality, aes(x = Month, y = Avg_Open, color = as.factor(Year)
     y = "Average Opening Price (SGD)",
     color = "Year"
   )
+#################################################
+#closeing summmary 
 
+# Phase 1: Statistical Deep-Dive of the Close Price
+close_stats <- clean_data %>%
+  group_by(Year = year(date)) %>%
+  summarise(
+    Avg_Close = mean(close, na.rm = TRUE),
+    Median_Close = median(close, na.rm = TRUE),
+    Volatility_Close = sd(close, na.rm = TRUE),
+    Max_Close = max(close, na.rm = TRUE),
+    Min_Close = min(close, na.rm = TRUE),
+    Total_Days = n()
+  )
 
+print(close_stats)
+# finding the summary for the close 
+summary(clean_data$close)
