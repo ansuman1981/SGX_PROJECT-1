@@ -46,6 +46,7 @@ clean_data %>%
     Volatility = sd(open)
   )
 
+# check the density ........................................................
 library(ggplot2)
 # check density
 ggplot(clean_data, aes(x = open, fill = as.factor(year(date)))) +
@@ -68,7 +69,7 @@ yearly_summary <- clean_data %>%
 print(yearly_summary)
 
 
-#  Run The "Trend Journey" 
+#  Run The "Trend Journey 2024 to 2025 every month" 
 library(ggplot2)
 library(lubridate)
 
@@ -97,7 +98,7 @@ ggplot(clean_data, aes(x = date, y = open)) +
        color = "Year")
 
 
-# black swan 
+# black swan findingn outlier 
 
 library(ggplot2)
 library(lubridate)
@@ -124,7 +125,7 @@ ggplot(clean_data, aes(x = as.factor(year(date)), y = open, fill = as.factor(yea
   )
 
 
-# Analyzing the 'Personality' of the Work Week
+# Analyzing the 'Personality' of the Work Week monday to friday  
 weekly_personality <- clean_data %>%
   group_by(Year =year(date), day_of_week) %>%
   summarise(
@@ -135,6 +136,7 @@ weekly_personality <- clean_data %>%
   arrange(Year, match(day_of_week, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")))
 
 print(weekly_personality)
+
 
 library(ggplot2)
 # Re-ordering the days so they appear in Work-Week order
@@ -154,7 +156,7 @@ ggplot(clean_data, aes(x = day_of_week, y = open, fill = as.factor(year(date))))
        y = "Average Opening Price",
        fill = "Year")
 
-# Analyzing the month SEASONALITY
+# Analyzing the month SEASONALITY with month, average_open and growth_range
 monthly_seasonality <- clean_data %>%
   group_by(Year = year(date), Month = month(date, label = TRUE)) %>%
   summarise(
@@ -166,7 +168,7 @@ monthly_seasonality <- clean_data %>%
 
 print(monthly_seasonality)
 
-#plot 
+#plot comapring average monthly opening price trends 
 library(ggplot2)
 library(lubridate)
 
@@ -196,3 +198,5 @@ ggplot(monthly_seasonality, aes(x = Month, y = Avg_Open, color = as.factor(Year)
     y = "Average Opening Price (SGD)",
     color = "Year"
   )
+
+
