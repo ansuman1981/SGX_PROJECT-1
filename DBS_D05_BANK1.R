@@ -216,3 +216,20 @@ close_stats <- clean_data %>%
 print(close_stats)
 # finding the summary for the close 
 summary(clean_data$close)
+
+#The Verdict Analysis (Win/Loss Frequency)
+# Phase 2: Calculating Daily Win/Loss Frequency and Magnitude
+verdict_analysis <- clean_data %>%
+  mutate(Daily_Verdict = ifelse(close > open, "Green Day (Bullish)", "Red Day (Bearish)")) %>%
+  group_by(Year = year(date), Daily_Verdict) %>%
+  summarise(
+    Count = n(),
+    Avg_Move_Size = mean(close - open, na.rm = TRUE),
+    Max_Daily_Gain = max(close - open, na.rm = TRUE),
+    Max_Daily_Loss = min(close - open, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  group_by(Year) %>%
+  mutate(Win_Loss_Percentage = (Count / sum(Count)) * 100)
+
+print(verdict_analysis)
