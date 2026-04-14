@@ -254,3 +254,26 @@ ggplot(clean_data, aes(x = Intraday_Move, fill = as.factor(year(date)))) +
        y = "Density") +
   annotate("text", x = 1, y = 0.5, label = "Bulls Win -->", color = "green") +
   annotate("text", x = -1, y = 0.5, label = "<-- Bears Win", color = "red")
+
+####c closing outlier 
+library(ggplot2)
+library(lubridate)
+
+ggplot(clean_data, aes(x = as.factor(year(date)), y = close, fill = as.factor(year(date)))) +
+  # 1. The "Cloud": Shows the density/shape of the prices
+  geom_violin(trim = FALSE, alpha = 0.4, color = NA) +
+  # 2. The "Structure": The professional boxplot inside
+  geom_boxplot(width = 0.1, outlier.colour = "red", outlier.shape = 16, alpha = 0.6) +
+  # 3. The "Rain": Individual days so we can see every single settle
+  geom_jitter(width = 0.05, alpha = 0.2, size = 0.8, aes(color = as.factor(year(date)))) +
+  # Modern styling
+  theme_minimal() +
+  scale_fill_manual(values = c("2024" = "#95a5a6", "2025" = "#2c3e50")) +
+  scale_color_manual(values = c("2024" = "#7f8c8d", "2025" = "#34495e")) +
+  labs(
+    title = "Closing Price Structural Integrity",
+    subtitle = "Comparing the 'Final Verdict' distribution (2024 vs 2025)",
+    x = "Year",
+    y = "Closing Price (SGD)"
+  ) +
+  theme(legend.position = "none")
