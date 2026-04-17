@@ -255,7 +255,9 @@ ggplot(clean_data, aes(x = Intraday_Move, fill = as.factor(year(date)))) +
   annotate("text", x = 1, y = 0.5, label = "Bulls Win -->", color = "green") +
   annotate("text", x = -1, y = 0.5, label = "<-- Bears Win", color = "red")
 
-####c closing outlier 
+###################
+# finding the outlier 
+# comparing the "final verdict distribution 2024-2025
 library(ggplot2)
 library(lubridate)
 
@@ -277,3 +279,34 @@ ggplot(clean_data, aes(x = as.factor(year(date)), y = close, fill = as.factor(ye
     y = "Closing Price (SGD)"
   ) +
   theme(legend.position = "none")
+
+
+
+####c final monthly personality
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+
+# Step 1: Aggregate Monthly Close Prices
+monthly_radar <- clean_data %>%
+  mutate(Month = month(date, label = TRUE)) %>%
+  group_by(Year = year(date), Month) %>%
+  summarise(Avg_Close = mean(close, na.rm = TRUE), .groups = "drop")
+
+# Step 2: Create the Seasonal Radar Plot
+ggplot(monthly_radar, aes(x = Month, y = Avg_Close, group = as.factor(Year), color = as.factor(Year))) +
+  geom_polygon(fill = NA, size = 1.2) + # Connects Dec back to Jan
+  geom_point(size = 3) +
+  coord_polar() + # This makes it a circle (Radar)
+  theme_minimal() +
+  scale_color_manual(values = c("2024" = "#BDC3C7", "2025" = "#2c3e50"), name = "Year") +
+  labs(title = "Monthly Price Personality: The Annual Cycle",
+       subtitle = "The 'Expansion' of the 2025 circle shows consistent growth across all seasons",
+       y = "Avg Close (SGD)",
+       x = "") +
+  theme(axis.text.y = element_blank(), # Cleans up the inside of the circle
+        plot.title = element_text(face = "bold", size = 16))
+
+
+#########################################################
+
