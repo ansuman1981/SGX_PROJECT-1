@@ -2,7 +2,7 @@ install.packages("readr")
 library(readr)
 library(dplyr)
 library(lubridate)
-D05 <- read.csv("D05.SI_2024-2026.csv")
+D05 <- read.csv("D05.SI_2024-2026.csv.csv")
 names(D05)
 dbs <- D05
 sum(is.na(dbs$close)) # check any NA values 
@@ -309,4 +309,15 @@ ggplot(monthly_radar, aes(x = Month, y = Avg_Close, group = as.factor(Year), col
 
 
 #########################################################
+# Phase 6, Step 1: The Macro Ceiling Analysis
+macro_ceiling <- clean_data %>%
+  group_by(Year = year(date)) %>%
+  summarise(
+    Absolute_Max_High = max(high, na.rm = TRUE),
+    Average_High = mean(high, na.rm = TRUE),
+    # Averaging the top 10 highest days to find the "True" Resistance Zone
+    True_Ceiling_Top10 = mean(sort(high, decreasing = TRUE)[1:10], na.rm = TRUE),
+    .groups = "drop"
+  )
 
+print(macro_ceiling)
